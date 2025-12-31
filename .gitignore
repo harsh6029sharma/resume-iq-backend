@@ -1,0 +1,5 @@
+venv/
+.env
+notes
+__pycache__/
+*.pycc
