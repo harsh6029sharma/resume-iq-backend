@@ -25,19 +25,4 @@ def extraction_pipeline(text:str)->dict:
         "experience":experience
     }
 
-def scoring_pipeline(extracted_data:dict)->int:
-    skills_score = skill_score(extracted_data)
-    educations_score = education_score(extracted_data)
-    experiences_score = experience_score(extracted_data)
-    contacts_score = contact_score(extracted_data)
-    raw_score = (
-        skills_score +
-        educations_score +
-        experiences_score +
-        contacts_score
-    )
-    # overall score is in range of 0-10
-    MAX_SCORE = 11  # defined max
-    normalized_score = round((raw_score / MAX_SCORE) * 10)
-
-    return normalized_score
+def scoring_pipeline(extracted_data: dict, jd_data: dict) -> dict:x

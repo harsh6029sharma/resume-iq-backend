@@ -1,5 +1,6 @@
 # keyword extraction
 import re
+from thefuzz import fuzz
 
 def extract_skills(text:str)->list:
     text = text.lower()
@@ -14,17 +15,22 @@ def extract_skills(text:str)->list:
             "csharp": ["c#", "c-sharp", "c sharp"],
             "golang": ["golang", "go language"],
             "php": ["php"],
-            "ruby": ["ruby", "ror", "ruby on rails"]
+            "ruby": ["ruby", "ror", "ruby on rails"],
+            "restful api": ["rest api", "restful", "apis"],
+            "html5": ["html", "html5", "web technologies"],
+            "css3": ["css", "css3", "sass", "less"]
         },
         "web_frameworks": {
             "react": ["react", "react.js", "reactjs"],
             "angular": ["angular", "angularjs", "angular.js"],
             "vue": ["vue", "vue.js", "vuejs"],
-            "node": ["node", "node.js", "nodejs"],
-            "express": ["express", "expressjs", "express.js"],
+            "node.js": ["node", "node.js", "nodejs","Node.js","Nodejs"],
+            "Node.js": ["node", "node.js", "nodejs","Node.js","Nodejs"],
+            "express.js": ["express", "expressjs", "express.js"],
             "django": ["django"],
             "flask": ["flask"],
-            "fastapi": ["fastapi"]
+            "fastapi": ["fastapi"],
+            "spring boot": ["spring", "springboot", "spring framework"]
         },
         "databases": {
             "postgresql": ["postgresql", "postgres", "psql"],
@@ -42,7 +48,8 @@ def extract_skills(text:str)->list:
             "kubernetes": ["kubernetes", "k8s"],
             "jenkins": ["jenkins", "ci/cd", "cicd"],
             "terraform": ["terraform"],
-            "git": ["git", "github", "gitlab", "bitbucket"]
+            "git": ["git", "github", "gitlab", "bitbucket"],
+            "aws": ["aws", "amazon web services", "ec2", "s3", "lambda", "aws migration"]
         },
         "data_science_ai": {
             "machine_learning": ["ml", "machine learning", "deep learning"],
@@ -61,15 +68,22 @@ def extract_skills(text:str)->list:
         }
     }
 
-    found_skills = []
-    for category in skills.values():
-        for skill_name, variants in category.items():
+    found_skills = set()
+    for category,skills_dict in skills.items():
+        for standard_name, variants in skills_dict.items():
             for variant in variants:
-                # \b (word boundary) use karein taaki 'C' skill 'Cat' mein match na ho jaye
-                pattern = rf"\b{re.escape(variant.lower())}\b"
-                if re.search(pattern, text):
-                    found_skills.append(skill_name)
-                    break 
+                variant_clean = variant.lower()
+                # using regex or in oprtr
+                if variant_clean in text:
+                    found_skills.add(standard_name)
+                    break
+
+                # using thefuzz library
+                words = text.split()
+                for word in words:
+                    if fuzz.ratio(variant_clean,word) >90:
+                        found_skills.add(standard_name)
+                        break
                     
     return list(found_skills)
 
@@ -77,6 +91,7 @@ def extract_skills(text:str)->list:
 
 
 def extract_contacts(text:str)->dict:
+
     text = text.lower()
 
     contacts = {
@@ -117,76 +132,23 @@ def extract_contacts(text:str)->dict:
 
 def extract_education(text:str)->dict:
     text = text.lower()
-    education = {
+    education_map = {
         "degrees": {
-            "bachelor": [
-            "bachelor",
-            "bachelors",
-            "b.tech",
-            "btech",
-            "b.e",
-            "be",
-            "b.sc",
-            "bsc",
-            "bca"
-            ],
-            "master": [
-            "master",
-            "masters",
-            "m.tech",
-            "mtech",
-            "m.e",
-            "me",
-            "m.sc",
-            "msc",
-            "mca"
-            ],
-            "phd": [
-            "phd",
-            "doctorate"
-            ],
-            "diploma": [
-            "diploma"
-            ]
+            "bachelor": [r"b\.tech", r"btech", r"b\.e", r"be", r"b\.sc", r"bsc", r"bca", r"bachelors?", r"undergraduate"],
+            "master": [r"m\.tech", r"mtech", r"m\.e", r"me", r"m\.sc", r"msc", r"mca", r"masters?", r"postgraduate"],
+            "phd": [r"phd", r"doctorate", r"p\.h\.d"],
+            "diploma": [r"diploma"]
         },
-
         "streams": {
-            "computer_science": [
-            "computer science",
-            "cse",
-            "information technology",
-            "it",
-            "software engineering"
-            ],
-            "electronics": [
-            "electronics",
-            "ece",
-            "electrical",
-            "eee"
-            ],
-            "mechanical": [
-            "mechanical",
-            "mech"
-            ],
-            "civil": [
-            "civil"
-            ]
-        },
-
-         "institutions_keywords": [
-            "university",
-            "college",
-            "institute",
-            "school"
-        ],
-
-        "year_pattern": r"\b(?:19|20)\d{2}\b"
-
+            "computer_science": [r"computer science", r"cse", r"information technology", r"it", r"software engineering"],
+            "electronics": [r"electronics", r"ece", r"electrical", r"eee"],
+            "mechanical": [r"mechanical", r"mech"],
+            "civil": [r"civil"]
         }
+    }
 
-    found_degrees = []
-    found_streams = []
-    institution = False
+    found_degrees = set()
+    found_streams = set()
     
     for degree_type,keywords in education["degrees"].items():
         for deg in keywords:
