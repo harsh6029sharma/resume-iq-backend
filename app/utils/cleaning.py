@@ -18,16 +18,17 @@ def remove_emojis_and_icons(text: str) -> str:
     )
     return emoji_pattern.sub(" ", text)
 
+def clean_text(text:str)->str:
+    # remove emojis and icons
+    text = remove_emojis_and_icons(text)
 
-def remove_special_chars(text: str) -> str:
-    return re.sub(
-        r"[^a-zA-Z0-9\s.,:;()\-\/@+]",
-        " ",
-        text
-    )
+    # remove newlines with space 
+    text = re.sub(r"[\n\r\t]+", " ", text)
 
-def newline(text:str)->str:
-    return re.sub(r"\n","",text)
+    # remove special chars
+    text = re.sub(r"[^a-zA-Z0-9\s.,:;()\-\/@+#.]", " ", text)
 
-def remove_extra_space(text:str)->str:
-    return re.sub(r"\s+"," ",text).strip()
+    # Remove extra spaces 
+    text = re.sub(r"\s+"," ",text)
+
+    return text

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.resume.routers import router as resume_routers
+from app.api.endpoints import router as resume_routers
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
