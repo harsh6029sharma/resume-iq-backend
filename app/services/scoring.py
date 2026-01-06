@@ -38,7 +38,7 @@ def calculate_ats_score(resume_data, jd_data):
     else:
         edu_match = 0
 
-    # 4. FINAL WEIGHTED SCORE
+    # 4. final weighted score
     final_score = (skill_score * SKILL_WEIGHT) + (exp_score * EXP_WEIGHT) + (edu_match * EDU_WEIGHT)
 
     return {

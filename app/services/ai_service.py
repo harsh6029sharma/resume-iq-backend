@@ -1,5 +1,4 @@
 from langchain_groq import ChatGroq
-# from langchain_openai import ChatOpenAI
 from fastapi import HTTPException
 from langchain_core.output_parsers import PydanticOutputParser
 from app.schemas.ai_schema import SeniorDevFeedback
@@ -16,12 +15,6 @@ llm = ChatGroq(
     temperature=0,
     api_key=os.getenv("GROQ_API_KEY")
 )
-
-# llm = ChatOpenAI(
-#     model="gpt-5-nano",
-#     api_key=os.getenv("OPENAI_API_KEY")
-    
-# )
 
 async def get_llm_feedback(resume_data,jd_text,base_score):
     try:

@@ -2,7 +2,6 @@ from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
 
-# --- User Schemas ---
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -10,7 +9,6 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(..., min_length=8)
-    # Note: is_admin yahan nahi hona chahiye security ke liye
 
 class UserUpdate(BaseModel):
     name: Optional[str] = None
@@ -26,7 +24,6 @@ class UserOut(UserBase):
     class Config:
         from_attributes = True
 
-# --- Password & Auth Schemas ---
 
 class Token(BaseModel):
     access_token: str

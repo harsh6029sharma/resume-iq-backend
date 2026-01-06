@@ -13,13 +13,12 @@ from app.services.services import (
 
 router = APIRouter(prefix="/account", tags=["Account"])
 
-# --- Helper function for Cookies ---
 def set_refresh_cookie(response: Response, refresh_token: str):
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=True,  # HTTPS par hi chalega
+        secure=True,  # works only for https
         samesite="Lax",
         max_age=60 * 60 * 24 * 7  # 7 days
     )
@@ -36,7 +35,6 @@ async def login(session: sessionDep, form_data: OAuth2PasswordRequestForm = Depe
     
     tokens = await create_tokens(session, user)
     
-    # Refresh token cookie mein aur Access token body mein
     response = JSONResponse(content={"access_token": tokens["access_token"], "token_type": "bearer"})
     set_refresh_cookie(response, tokens["refresh_token"])
     return response
@@ -51,7 +49,6 @@ async def refresh_token(session: sessionDep, request: Request):
     if not user:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
     
-    # Purana token revoke karke naya dena behtar rehta hai (Token Rotation)
     await revoke_refresh_token(session, token)
     new_tokens = await create_tokens(session, user)
     
@@ -66,7 +63,7 @@ async def me(user: User = Depends(get_current_user)):
 @router.post("/change-password")
 async def password_change(
     session: sessionDep, 
-    data: PasswordChangeRequest, # String ki jagah Schema use karein
+    data: PasswordChangeRequest, 
     user: User = Depends(get_current_user)
 ):
     await change_password(session, user, data.new_password)
@@ -74,7 +71,6 @@ async def password_change(
 
 @router.post("/forgot-password")
 async def forgot_password(session: sessionDep, email: str):
-    # Isme email verify karke reset link bhejne ka logic hona chahiye
     return await process_password_reset(session, email)
 
 @router.post("/reset-password")
