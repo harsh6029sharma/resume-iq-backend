@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List,Literal
 
 class TechGap(BaseModel):
     skill: str = Field(description="Name of the missing or weak skill")
-    risk_level: str = Field(description="High/Medium/Low risk for this specific role")
+    risk_level: Literal["High", "Medium", "Low"] = Field(...)
     learning_path: str = Field(description="Exactly what to learn (e.g., 'Learn RxJS for Angular state management')")
 
 class ProjectOptimization(BaseModel):
@@ -12,6 +12,10 @@ class ProjectOptimization(BaseModel):
     architectural_advice: str = Field(description="How to re-engineer this project using JD's tech stack (e.g., migrating Node to Spring Boot)")
 
 class SeniorDevFeedback(BaseModel):
+    candidate_name: str = Field(description="Extract the candidate's full name from the resume")
+    job_title: str = Field(description="The professional job title extracted from the JD")
+    score_analysis: str
+    migration_guide: str
     executive_summary: str = Field(description="A deep-dive (150-200 words) analysis of technical compatibility")
     technical_gaps: List[TechGap] = Field(description="A list of at least 5 deep technical gaps")
     project_deep_dive: List[ProjectOptimization] = Field(description="Specific advice to improve candidate's projects")

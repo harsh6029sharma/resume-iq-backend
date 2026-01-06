@@ -1,25 +1,3 @@
-Job Role: Full Stack Developer
-Responsibilities:
-
-Frontend & Backend: React/Angular (Frontend) aur Node.js/Python/Java (Backend) ka use karke scalable web applications banana.
-
-Database Management: MongoDB ya SQL databases ko design aur optimize karna.
-
-API Integration: Robust RESTful APIs aur third-party services ko integrate karna.
-
-Deployment: Applications ko cloud (AWS/Azure/Docker) par deploy aur maintain karna.
-
-Requirements:
-
-HTML, CSS, JavaScript, aur modern frameworks ki gehri samajh.
-
-Server-side logic aur database architecture ka experience.
-
-Version control (Git) aur Clean Coding practices ki knowledge.
-
-<!-- response body -->
-
-
 Technical Requirements (The "Must-Haves")
 Front-End: Minimum 3 years of experience with Angular (v12+) and TypeScript. Strong command of HTML5, CSS3, and Responsive Design.
 

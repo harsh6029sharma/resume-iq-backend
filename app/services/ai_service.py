@@ -3,7 +3,7 @@ from langchain_groq import ChatGroq
 from fastapi import HTTPException
 from langchain_core.output_parsers import PydanticOutputParser
 from app.schemas.ai_schema import SeniorDevFeedback
-from app.prompts.analysis_prompt import prompt
+from app.prompts.analysis_prompt import prompt_template
 import os
 from dotenv import load_dotenv
 
@@ -25,14 +25,16 @@ llm = ChatGroq(
 
 async def get_llm_feedback(resume_data,jd_text,base_score):
     try:
-        formatted_prompt = prompt.format(
+        formatted_prompt = prompt_template.format(
             resume_data=resume_data,
             jd_text=jd_text,
             base_score=base_score,
             format_instructions=parser.get_format_instructions()
         )
         response = await llm.ainvoke(formatted_prompt)
-        return parser.parse(response.content)
+        parsed_feedback = parser.parse(response.content)
+        return parsed_feedback
+        
     except Exception as e:
         raise HTTPException(
             status_code=500,
